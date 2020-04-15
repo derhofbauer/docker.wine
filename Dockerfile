@@ -7,32 +7,18 @@
 # docker build -t wine .
 
 #FROM ubuntu
-FROM ubuntu:14.04
+FROM ubuntu:latest
 
 # no error msg for initing dialog from package installs
 #ENV DEBIAN_FRONTEND noninteractive
 
 # wine needs i386 to to run i386 binaries
-RUN dpkg --add-architecture i386
-RUN apt-get update
+RUN dpkg --add-architecture i386 && \
+    apt-get update
+RUN apt-get install -y wine-stable wine32 xvfb x11-apps
 
-# Wine 1.6
-#RUN apt-get install -y wine1.6
-
-# Wine 1.7
-RUN apt-get install -y software-properties-common && add-apt-repository -y ppa:ubuntu-wine/ppa
-RUN add-apt-repository ppa:ubuntu-x-swat/x-updates
-	# not strictly necessary
-RUN apt-get update
-RUN apt-get install -y wine1.7
-
-RUN apt-get install -y xvfb
-
-# xeyes testing
-RUN apt-get install -y x11-apps
-
-#RUN apt-get purge -y software-properties-common
-#RUN apt-get autoclean -y
+# Clean up after ourselves
+RUN apt-get autoclean -y
 
 #ADD . /build
 
@@ -52,12 +38,12 @@ RUN apt-get install -y x11-apps
 # Replace 1000 with your user / group id on your host system
 RUN useradd -u 1000 -d /home/developer -m -s /bin/bash developer
 #RUN export uid=1000 gid=1000 && \
-    mkdir -p /home/developer && \
-    echo "developer:x:${uid}:${gid}:Developer,,,:/home/developer:/bin/bash" >> /etc/passwd && \
-    echo "developer:x:${uid}:" >> /etc/group && \
-    echo "developer ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/developer && \
-    chmod 0440 /etc/sudoers.d/developer && \
-    chown ${uid}:${gid} -R /home/developer
+#    mkdir -p /home/developer && \
+#    echo "developer:x:${uid}:${gid}:Developer,,,:/home/developer:/bin/bash" >> /etc/passwd && \
+#    echo "developer:x:${uid}:" >> /etc/group && \
+#    echo "developer ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/developer && \
+#    chmod 0440 /etc/sudoers.d/developer && \
+#    chown ${uid}:${gid} -R /home/developer
 
 USER developer
 
