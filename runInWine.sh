@@ -14,5 +14,5 @@ if [ -f $input ]; then
 
     ./docker.wine.sh -v $filepath:/executable docker.wine wine /executable/$filename
 else
-    ./docker.wine.sh -v $filepath:/executable docker.wine wine $input
+    ./docker.wine.sh docker.wine wine $input
 fi
